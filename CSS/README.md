@@ -2,20 +2,6 @@
 
 A quick reference guide covering CSS syntax, selectors, the three ways to write CSS, and how the DOM connects HTML to CSS.
 
-## Table of Contents
-
-- [CSS Syntax](#css-syntax)
-- [Selectors](#selectors)
-- [The Three Ways to Write CSS](#the-three-ways-to-write-css)
-  - [Method 1 — Inline CSS ❌](#method-1--inline-css-)
-  - [Method 2 — Internal CSS ⚠️](#method-2--internal-css-️)
-  - [Method 3 — External CSS ✅](#method-3--external-css-)
-  - [Quick Comparison](#quick-comparison)
-- [CSS Syntax — How a Rule Is Written](#css-syntax--how-a-rule-is-written)
-- [The DOM — How CSS Finds Elements](#the-dom--how-css-finds-elements)
-- [Developer Tools](#developer-tools)
-
----
 
 ## CSS Syntax
 
