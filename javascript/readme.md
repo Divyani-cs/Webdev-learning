@@ -166,37 +166,6 @@ const students = [
 // reduce -> total marks of everyone
 ```
 
-### 1.10 Practice questions
-
-1. Create `Employee`, `Mobile`, and `Car` objects.
-2. Add, update, and delete properties on them.
-3. Loop through an object's properties.
-4. Create an array of 5 students.
-5. Use `map()` to get their names.
-6. Use `filter()` to get students above 80 marks.
-7. Use `find()` to search for one student.
-8. Use `reduce()` to calculate total marks.
-9. Sort the students by marks.
-
-### 1.11 Interview questions
-
-- What is an object?
-- Difference between an object and an array?
-- Difference between dot and bracket notation?
-- What is the `this` keyword?
-- Difference between `map()` and `forEach()`?
-- Difference between `filter()` and `find()`?
-- What does `reduce()` do?
-- When do you use `some()` and `every()`?
-
-### 1.12 Key takeaways
-
-- An object groups related data; an array is an ordered list.
-- `map` and `filter` make new arrays; `find` returns one item; `reduce` returns one value.
-- Real app data is an array of objects, and these methods are how you use it.
-
----
-
 ## 2. Functions & Events
 
 ### 2.1 What is a function?
