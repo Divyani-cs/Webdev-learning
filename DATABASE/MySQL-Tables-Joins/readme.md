@@ -176,5 +176,3 @@ The normalized version stores the email once in `users`. Change it in one place,
 
 
 ---
-
-*Everything here ran live in class. If a part does not click, message me the file name and the line, and read it again tonight while it is fresh.*
