@@ -5,7 +5,7 @@
 
 ---
 
-## 1. What a REST API Is (explained simply)
+## 1. What a REST API Is 
 
 Imagine a big restaurant. You sit at a table and never walk into the kitchen. A waiter carries your order to the kitchen and brings the food back. You and the kitchen never talk directly.
 
