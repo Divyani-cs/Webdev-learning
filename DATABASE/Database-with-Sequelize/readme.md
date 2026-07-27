@@ -176,4 +176,3 @@ npx sequelize-cli db:migrate:status     # see what has run
 - Saw how foreign keys are declared twice: once in the migration (the real database constraint) and once in each model's `associate()` function (how Sequelize understands the relationship in code).
 - Learned the `db:migrate` commands used to actually build (and undo) the tables.
 
-Tomorrow: we build the real APIs on top of this structure.
