@@ -56,7 +56,8 @@ The browser sends a **request** , the server sends back a **response**.
 - **Common status codes:** 200 OK, 301 Moved, 404 Not Found, 500 Server Error
 - 
 - 
-    HTTP Request 
+    ## HTTP Request
+  
 With a secure connection established, the browser sends a request
 ```
 GET / HTTP/1.1
@@ -75,7 +76,8 @@ Cache-Control → Do we need fresh content or is cache okay?
 User-Agent → Browser identifies itself to the server
 
 
- HTTP Response 
+## HTTP Response 
+
 The server processes the request and sends back a response.
 
 
