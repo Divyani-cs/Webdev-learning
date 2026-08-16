@@ -125,8 +125,8 @@ await sequelize.sync(); // no force, so existing data is kept
 
 ```js
 const user = await User.create({
-  name: 'Himanshu',
-  email: 'himanshu@example.com',
+  name: 'Divyani',
+  email: 'Divyani@example.com',
   password: 'secret123',
 });
 
@@ -137,7 +137,7 @@ console.log('Saved user #' + user.id);
 ```sql
 INSERT INTO `Users`
 (`name`, `email`, `password`, `createdAt`, `updatedAt`)
-VALUES ('Himanshu', 'himanshu@example.com', ..., NOW(), NOW());
+VALUES ('Divyani', 'Divyani@example.com', ..., NOW(), NOW());
 ```
 
 **Result:**
@@ -223,7 +223,7 @@ WHERE `Resume`.`id` = 1;
 
 **Result:**
 ```
-Resume "Full Stack Intern" belongs to Himanshu
+Resume "Full Stack Intern" belongs to Divyani
 ```
 
 `include: User` is what tells Sequelize to run a `LEFT OUTER JOIN` instead of a plain `SELECT`, matching `userId` to `id` for you. The joined data comes back attached as `first.User` — so `first.User.name` reads the owner's name straight off the same result, no second query needed.
@@ -279,4 +279,3 @@ The row we updated in JavaScript shows the new title, right there in MySQL Workb
 - **Updated** a resume with `.save()`.
 - Confirmed every change directly in MySQL with a plain `SELECT`.
 
-Every step showed the same three things: the JavaScript you write, the SQL Sequelize turns it into, and the result — so you know exactly what each line does to the database.
