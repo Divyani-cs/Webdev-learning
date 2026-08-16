@@ -81,63 +81,29 @@ npx sequelize-cli model:generate --name Export \
 
 ---
 
-## 4. How the Tables Connect: the ER Diagram
+How the Tables Connect — The Relationship Structure
 
-This is the whole database in one picture. An arrow points from a table to the one it depends on. For example, a section belongs to a document, so `sections` points to `documents`.
+The whole database can be thought of as one connected structure, where an arrow points from a table to the table it depends on. For example, a `section` belongs to a `document`, so `sections` points to `documents`.
 
-**Resume Forge — Database Schema** · 9 tables, 10 foreign keys · arrow points from child to the parent it references
-
-```
-users                          sections                items
-─────────                      ─────────                ─────────
-id PK                          id PK                     id PK
-name                           heading                   content
-email UNIQUE                   position                  position
-password                       documentId FK ──┐          sectionId FK ──┐
-tier ENUM                                       │                        │
-aiCredits                                       │                        │
-                                                 │                        │
-                    documents ◄─────────────────┘                        │
-                    ─────────                                            │
-templates           id PK                                                │
-─────────           title                                                │
-id PK       ◄─────  type ENUM                                            │
-name                userId FK  ──────► users (CASCADE)                   │
-config TEXT         templateId FK ──► templates (SET NULL)               │
-                        ▲   ▲   ▲                                        │
-                        │   │   │                                        │
-              ┌─────────┘   │   └──────────┐                             │
-              │              │              │                            │
-          versions      applications      shares                        │
-          ─────────     ─────────         ─────────                     │
-          id PK          id PK             id PK                        │
-          snapshot       company           slug UNIQUE                  │
-          label          role              documentId FK (CASCADE)      │
-          documentId FK  status ENUM                                    │
-          (SET NULL)     userId FK (CASCADE)                            │
-                          documentId FK (CASCADE)                       │
-                                                                         │
-                                                          items.sectionId FK
-                                                          (CASCADE) ─────┘
-
-exports
-─────────
-id PK
-format ENUM
-fileUrl
-documentId FK (CASCADE)
-userId FK (CASCADE)
+```mermaid
+flowchart TD
+    users --> documents
+    templates --> documents
+    documents --> sections
+    sections --> items
+    documents --> versions
+    users --> applications
+    documents --> applications
+    documents --> shares
+    documents --> exports
+    users --> exports
 ```
 
-*PK = primary key · FK = foreign key · red arrow = ON DELETE CASCADE · grey arrow = ON DELETE SET NULL*
+`documents` sits at the center of the schema — almost every other table either points to it directly, or points to something that points to it. `users` sits at the top, since accounts don't depend on anything else in the system.
 
----
+**Foreign key behavior inside migrations:** a migration for a column like `userId` includes a reference back to its parent table, along with what should happen on update or delete:
 
-## 5. Where the Connections Actually Live
-
-Every foreign key column, like `userId:integer`, becomes a real constraint in the migration:
-
-```js
+```javascript
 userId: {
   type: Sequelize.INTEGER,
   references: { model: 'Users', key: 'id' },
@@ -146,27 +112,114 @@ userId: {
 }
 ```
 
-And the model side of the relationship is written in each model's `associate()` function:
+This is the same `CASCADE` behavior introduced on Day 1 — if a user is deleted, everything referencing that user through `CASCADE` is automatically deleted too, instead of being blocked or left orphaned.
 
-```js
+The model files declare the same relationship in JavaScript, using an `associate()` function, for example:
+
+```javascript
 Document.belongsTo(models.User, { foreignKey: 'userId' });
 Document.hasMany(models.Section, { foreignKey: 'documentId', onDelete: 'CASCADE' });
 ```
 
-So `documents` → `users` (a document belongs to a user), and `documents` → `sections` (a document has many sections) — the same "arrow points to what it depends on" idea from the ER diagram, just written in code.
-
 ---
 
-## 6. Running the Migrations
+### 4. Running Migrations
 
-```bash
+```
 npx sequelize-cli db:migrate            # build every table
 npx sequelize-cli db:migrate:undo       # undo the last table
 npx sequelize-cli db:migrate:undo:all   # undo everything
 npx sequelize-cli db:migrate:status     # see what has run
 ```
 
+Migrations must run in a specific order, not a random one, because tables depending on other tables (like `documents` depending on `users`) need their parent table to already exist first.
+
 ---
+
+## Register API, Password Security, and Async JavaScript
+
+###  The Register API
+
+The register endpoint takes a name, email, and password from the request. It checks that the email is not already in use, saves the new user to the database, and returns a token, so the user is immediately logged in right after signing up — without needing a separate login step.
+
+```mermaid
+flowchart TD
+    A[Request - name, email, password] --> B{Email already exists}
+    B -- Yes --> C[Reject - send error]
+    B -- No --> D[Hash the password]
+    D --> E[Save new user to database]
+    E --> F[Generate token]
+    F --> G[Respond - user is now logged in]
+```
+
+---
+
+###  Password Encryption
+
+A password is never stored exactly as it was typed. It is hashed first, so what sits in the database is a scrambled string, not the real password.
+
+**Why one-way encryption specifically:** hashing is deliberately one-way. A password can be turned into its scrambled form, but the scrambled form can never be turned back into the original password. Even someone looking directly at the database cannot read anyone's real password.
+
+At login, the newly typed attempt is hashed the same way, and the two scrambled strings are compared — not the two plain passwords. This means that even if a database is ever leaked, it still does not hand over anyone's real password.
+
+> **Analogy — A One-Way Paper Shredder**
+> Hashing a password is like feeding a piece of paper into a shredder that always produces the exact same confetti pattern for the exact same original page. Given the confetti, there's no way to reconstruct the original page. But if a new page is shredded and its confetti pattern matches an old one exactly, it proves it was the same original page — without ever needing to see the page itself again.
+
+```mermaid
+flowchart LR
+    A[Plain password typed at signup] --> B[Hash function - one way only]
+    B --> C[Scrambled string stored in database]
+    D[Plain password typed at login] --> E[Hash function - same process]
+    E --> F{Scrambled strings match}
+    F -- Yes --> G[Login allowed]
+    F -- No --> H[Login rejected]
+```
+
+---
+
+### Promises
+
+**Promise — Definition:** a way to handle an operation that takes time, such as a database call or a request over the internet, without freezing the rest of the code while waiting. Instead of waiting, the code receives a Promise immediately, and the real result arrives later.
+
+A Promise has three states:
+- **Pending** — still waiting for the result
+- **Resolved** — the operation succeeded
+- **Rejected** — the operation failed
+
+`.then` runs when a Promise resolves successfully. `.catch` runs when a Promise is rejected.
+
+```mermaid
+flowchart TD
+    A[Promise created] --> B[Pending]
+    B --> C{Operation finishes}
+    C -- Success --> D[Resolved - .then runs]
+    C -- Failure --> E[Rejected - .catch runs]
+```
+
+---
+
+###  Callback Hell
+
+**Callback hell — Definition:** what happens when one slow task depends on the result of another, which depends on another, and each step is handled using nested callback functions. The code keeps nesting deeper and drifting to the right of the screen with every added step, becoming hard to read and even harder to handle errors in.
+
+> **Analogy — A Chain of Nested Boxes**
+> Callback hell is like opening a gift box, only to find another wrapped box inside, then another inside that one, and so on. Each layer has to be fully opened before the next one is even visible, and if something goes wrong in the middle, it's unclear which box actually caused the problem.
+
+---
+
+###  Solving Callback Hell — Promises and Async/Await
+
+**Promises flatten the nesting.** Instead of callbacks nested inside callbacks, a chain of `.then()` calls can be lined up one after another, at the same indentation level.
+
+**Async/await goes a step further.** It lets the slow steps be written as if they run line by line, top to bottom — which reads like ordinary, sequential code, while error handling stays in one single place (a `try/catch` block), rather than being scattered across every nested callback.
+
+```mermaid
+flowchart TD
+    A[Callback hell - deeply nested, hard to read] --> B[Promises - flat .then chain]
+    B --> C[Async and await - reads like normal top to bottom code]
+    C --> D[Error handling centralized in one try catch block]
+```
+
 
 ## 🎯 What We Did Today
 
