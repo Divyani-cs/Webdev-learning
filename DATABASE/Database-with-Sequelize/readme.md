@@ -18,6 +18,14 @@ And each one created **two** files at once:
 > Migration builds the shelf; model puts things on and off the shelf. One command wrote both, already matching each other.
 
 ---
+```mermaid
+flowchart TD
+    A[npx sequelize-cli model generate] --> B[Model file in models folder]
+    A --> C[Migration file in migrations folder]
+    B --> D[How the app reads and writes rows]
+    C --> E[One-time instruction that builds the table]
+```
+
 
 ## 2. The Nine Commands, in Order
 
