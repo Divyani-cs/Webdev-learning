@@ -1,8 +1,8 @@
-## Login & Profile(DAY-8)
+## Login & Profile (DAY-8)
 
 ## What we learnt today
 
- the login and profile flow. This is how it works:
+ The login and profile flow. This is how it works:
 
 1. User types email and password on the login page and clicks Login.
 2. The app sends this data to the server.
@@ -229,6 +229,3 @@ export class FeedbackFormComponent {
 </section>
 ```
 
-This one goes further than the other three — added per-field error messages using `*ngIf="field.touched && field.invalid"`, so the error only shows after the user has clicked into that field and left it empty or invalid, not immediately on page load. Fields include text, email, radio (rating 1-5), a textarea, and radio again for recommend.
-
----
