@@ -1,5 +1,5 @@
 
-# Angular Modules and Components
+# Angular Modules and Components (DAY-3)
 
 **Topic:** Angular Modules (NgModule) + Component Communication
 
