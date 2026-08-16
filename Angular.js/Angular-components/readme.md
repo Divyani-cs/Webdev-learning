@@ -1,5 +1,5 @@
 
-## Angular Components
+## Angular Components (DAY-2)
 
 ### The building block of every Angular app
 
