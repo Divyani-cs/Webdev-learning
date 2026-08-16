@@ -81,16 +81,16 @@ SELECT * FROM users;
 +----+-----------+-------------------------+
 | id | name      | email                   |
 +----+-----------+-------------------------+
-| 1  | Himanshu  | himanshu@example.com    |
-| 2  | Ayush     | ayush@example.com       |
-| 3  | Tanushree | tanushree@example.com   |
+| 1  | Divyani  | divyani@example.com    |
+| 2  | Unishka   | unishka@example.com       |
+| 3  | Jiya      | jiya@example.com   |
 +----+-----------+-------------------------+
 ```
 
 The `*` means all columns. To find one person, filter with `WHERE`:
 
 ```sql
-SELECT * FROM users WHERE email = 'ayush@example.com';
+SELECT * FROM users WHERE email = 'divyani@example.com';
 ```
 
 ⚠️ **`WHERE` is not optional on `UPDATE` and `DELETE`.**
@@ -138,8 +138,8 @@ JOIN users ON resumes.userId = users.id;
 +--------------------+----------+
 | title              | name     |
 +--------------------+----------+
-| Full Stack Intern  | Himanshu |
-| QA Intern          | Ayush    |
+| Full Stack Intern  | Divyani |
+| QA Intern          | Jiya  |
 +--------------------+----------+
 ```
 
@@ -155,8 +155,8 @@ Imagine the bad, un-normalized version — one table where every resume row also
 
 | Title | Name | Email |
 |-------|------|-------|
-| Full Stack Intern | Himanshu | himanshu@example.com |
-| QA Intern | Himanshu | himanshu@example.com |
+| Full Stack Intern | Divyani | Divyani@example.com |
+| QA Intern | Jiya | Jiya@example.com |
 
 Himanshu's name and email get copied on every resume he has. Two problems follow:
 1. **Waste** — the same data stored again and again.
@@ -166,7 +166,6 @@ The normalized version stores the email once in `users`. Change it in one place,
 
 **The rule in one line:** store each fact once, and link to it by id. Joins put the data back together when you need it. That's why relational databases use many small, connected tables instead of one giant one.
 
----
 
 ## 🎯 What We Did Today
 
@@ -174,8 +173,3 @@ The normalized version stores the email once in `users`. Change it in one place,
 2. **Created `resume_db`, the `users` table**, and added three users by hand in Workbench. Then `SELECT * FROM users` and saw the rows.
 3. **Created the `resumes` table**, added two resumes, and ran the join from section 8. Seeing your own data joined across two tables is the goal of today.
 
-
-
----
-
-*Everything here ran live in class. If a part does not click, message me the file name and the line, and read it again tonight while it is fresh.*
