@@ -1,4 +1,4 @@
-## Register API, Password Security, and Async JavaScript
+## Register API, Password Security, and Async JS
 
 ###  The Register API
 
