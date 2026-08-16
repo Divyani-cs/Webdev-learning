@@ -64,9 +64,9 @@ Read each line, because you are declaring the shape of your data:
 ## 5. Add Records (`INSERT`)
 
 ```sql
-INSERT INTO users (name, email) VALUES ('Himanshu', 'himanshu@example.com');
-INSERT INTO users (name, email) VALUES ('Ayush', 'ayush@example.com');
-INSERT INTO users (name, email) VALUES ('Tanushree','tanushree@example.com');
+INSERT INTO users (name, email) VALUES ('Divyani', 'divyani@example.com');
+INSERT INTO users (name, email) VALUES ('Unishka', 'unishka@example.com');
+INSERT INTO users (name, email) VALUES ('Jiya','jiya@example.com');
 ```
 
 Notice we never set `id` — MySQL fills it in automatically because of `AUTO_INCREMENT`.
@@ -81,16 +81,16 @@ SELECT * FROM users;
 +----+-----------+-------------------------+
 | id | name      | email                   |
 +----+-----------+-------------------------+
-| 1  | Himanshu  | himanshu@example.com    |
-| 2  | Ayush     | ayush@example.com       |
-| 3  | Tanushree | tanushree@example.com   |
+| 1  | Divyani   | divyani@example.com    |
+| 2  | Unishka   | unishka@example.com       |
+| 3  | Jiya      | jiya@example.com   |
 +----+-----------+-------------------------+
 ```
 
 The `*` means all columns. To find one person, filter with `WHERE`:
 
 ```sql
-SELECT * FROM users WHERE email = 'ayush@example.com';
+SELECT * FROM users WHERE email = 'jiya@example.com';
 ```
 
 ⚠️ **`WHERE` is not optional on `UPDATE` and `DELETE`.**
@@ -118,7 +118,7 @@ INSERT INTO resumes (title, summary, userId) VALUES ('Full Stack Intern', 'Node,
 INSERT INTO resumes (title, summary, userId) VALUES ('QA Intern', 'Manual + API testing', 2);
 ```
 
-> **Foreign key** — A column in one table that points to a row in another. `resumes.userId` holds a `users.id`. A resume with `userId = 1` belongs to Himanshu. The `FOREIGN KEY ... REFERENCES` line tells MySQL to enforce that link.
+> **Foreign key** — A column in one table that points to a row in another. `resumes.userId` holds a `users.id`. A resume with `userId = 1` belongs to Divyani. The `FOREIGN KEY ... REFERENCES` line tells MySQL to enforce that link.
 
 Notice `summary` is `TEXT`, not `VARCHAR`. `VARCHAR` caps at 255 characters; a real summary is longer. `TEXT` holds long text. Choosing the right type is part of designing a table.
 
@@ -138,8 +138,8 @@ JOIN users ON resumes.userId = users.id;
 +--------------------+----------+
 | title              | name     |
 +--------------------+----------+
-| Full Stack Intern  | Himanshu |
-| QA Intern          | Ayush    |
+| Full Stack Intern  | Divyani |
+| QA Intern          | Jiya  |
 +--------------------+----------+
 ```
 
@@ -155,18 +155,17 @@ Imagine the bad, un-normalized version — one table where every resume row also
 
 | Title | Name | Email |
 |-------|------|-------|
-| Full Stack Intern | Himanshu | himanshu@example.com |
-| QA Intern | Himanshu | himanshu@example.com |
+| Full Stack Intern | Divyani | divyani@example.com |
+| QA Intern | Divyani | divyani@example.com |
 
-Himanshu's name and email get copied on every resume he has. Two problems follow:
+Divyani's name and email get copied on every resume he has. Two problems follow:
 1. **Waste** — the same data stored again and again.
-2. **Update anomalies** — change his email in one row and forget the others, and now his records disagree with each other.
+2. **Update anomalies** — change her email in one row and forget the others, and now her records disagree with each other.
 
 The normalized version stores the email once in `users`. Change it in one place, and every resume, through the join, sees the new value instantly. Nothing to hunt down, nothing to miss.
 
 **The rule in one line:** store each fact once, and link to it by id. Joins put the data back together when you need it. That's why relational databases use many small, connected tables instead of one giant one.
 
----
 
 ## 🎯 What We Did Today
 
@@ -174,5 +173,3 @@ The normalized version stores the email once in `users`. Change it in one place,
 2. **Created `resume_db`, the `users` table**, and added three users by hand in Workbench. Then `SELECT * FROM users` and saw the rows.
 3. **Created the `resumes` table**, added two resumes, and ran the join from section 8. Seeing your own data joined across two tables is the goal of today.
 
-
----
