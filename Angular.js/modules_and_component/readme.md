@@ -1,4 +1,3 @@
----
 
 # Angular Modules and Components
 
@@ -264,5 +263,4 @@ Combines both — often used with form inputs via `ngModel`.
    - `( )` = Event Binding (event out, one-way)
    - `[( )]` = Two-Way Binding (both directions)
 
----
----
+
