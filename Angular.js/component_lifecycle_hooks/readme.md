@@ -199,7 +199,7 @@ export class ChildComponent implements OnChanges {
 ```
    PARENT COMPONENT                    CHILD COMPONENT
 ┌─────────────────────┐            ┌──────────────────────┐
-│  name = "Unishka"     │  @Input   │   ngOnChanges()         │
+│  name = "Divyani"     │  @Input   │   ngOnChanges()         │
 │                        │ ────────► │   fires automatically   │
 │  (changes name later)  │           │   whenever "name"        │
 │  name = "Rawat"        │ ────────► │   value changes here    │
